@@ -5,7 +5,11 @@
  */
 package ojekonlinejavacli;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 
@@ -31,7 +35,11 @@ public class OjekOnlineJavaCLI {
          */
         if (userFile.exists()) {
             System.out.println("You have been registered. Please login!");
-            login();
+            try {
+                user = login(userFile, user);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         } else {
             register();
         }
@@ -70,5 +78,40 @@ public class OjekOnlineJavaCLI {
             }
         }
     }
-    
+
+    private static String[] login(File userFile, String[] user) throws FileNotFoundException, IOException {
+        System.out.println("Login to Ojek Online Apps");
+        
+        Scanner in = new Scanner(System.in);
+        String email, password;
+        
+        System.out.print("your email : ");
+        email = in.nextLine();
+        
+        System.out.print("your password : ");
+        password = in.nextLine();
+        
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(userFile));
+            String line;
+            
+            while ((line = br.readLine()) != null) {
+                user = line.split(";");
+            }
+        } finally {
+            if (br != null) {
+                br.close();
+            } 
+        }
+        
+        // validate login
+        if (email.equals(user[2]) && password.equals(user[3])) {
+            System.out.println("login success");
+            return user;
+        } else {
+            System.out.println("Kombinasi Email/Nomor HP dan Password yang Anda masukkan salah");
+            return null;
+        }
+    }
 }
