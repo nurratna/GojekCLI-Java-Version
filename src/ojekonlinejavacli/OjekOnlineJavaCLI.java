@@ -6,9 +6,11 @@
 package ojekonlinejavacli;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -41,7 +43,11 @@ public class OjekOnlineJavaCLI {
                 ex.printStackTrace();
             }
         } else {
-            register();
+            try {
+                register(userFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
         
         if (user != null) {
@@ -112,6 +118,37 @@ public class OjekOnlineJavaCLI {
         } else {
             System.out.println("Kombinasi Email/Nomor HP dan Password yang Anda masukkan salah");
             return null;
+        }
+    }
+    
+    private static void register(File userFile) throws IOException {
+        // TODO code application logic here
+        System.out.println("");
+        System.out.println("Register to Ojek Online Apps");
+        
+        Scanner in = new Scanner(System.in);
+        String name, hp, email, password, saldo;
+        
+        System.out.print("your name : ");
+        name = in.nextLine();
+        System.out.print("your hp : ");
+        hp = in.nextLine();
+        System.out.print("your email : ");
+        email = in.nextLine();
+        System.out.print("your password : ");
+        password = in.nextLine();
+        saldo = "0";
+        
+        BufferedWriter br = null;
+        try {
+            br = new BufferedWriter(new FileWriter(userFile));
+            br.write(name + ";" + hp + ";" + email + ";" + password + ";" + saldo + ";");
+            System.out.println("Resgitration success");
+            
+        } finally {
+            if (br != null) {
+                br.close();
+            } 
         }
     }
 }
